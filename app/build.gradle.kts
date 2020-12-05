@@ -57,6 +57,8 @@ dependencies {
   implementation("androidx.ui:ui-tooling:$composeVersion")
   implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
 
+  implementation("com.google.android.gms:play-services-auth:18.1.0")
+
   testImplementation("junit:junit:4.13.1")
   androidTestImplementation("androidx.test.ext:junit:1.1.2")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
