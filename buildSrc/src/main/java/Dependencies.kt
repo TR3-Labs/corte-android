@@ -98,13 +98,21 @@ object Dependencies {
 
     const val daggerHilt = "com.google.dagger:hilt-android-testing:$DAGGER_HILT_VERSION"
     const val junit = "junit:junit:4.13.1"
-    const val uiTest = "androidx.ui:ui-test:$COMPOSE_VERSION"
+    const val uiTest = "androidx.compose.ui:ui-test:$COMPOSE_VERSION"
 
     object AndroidX {
 
       private const val version = "1.3.1-alpha02"
+
       const val runner = "androidx.test:runner:$version"
       const val rules = "androidx.test:rules:$version"
+
+      object Ext {
+
+        private const val version = "1.1.3-alpha02"
+
+        const val junit = "androidx.test.ext:junit:$version"
+      }
     }
   }
 }

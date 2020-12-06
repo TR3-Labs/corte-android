@@ -1,4 +1,4 @@
-import java.util.Properties
+import java.util.*
 
 plugins {
   id("com.android.application")
@@ -90,8 +90,11 @@ dependencies {
   implementation(Dependencies.ThirdParty.accompanist)
   implementation(Dependencies.ThirdParty.customtabs)
   implementation(Dependencies.ThirdParty.Roomigrant.runtime)
+
   testImplementation(Dependencies.Testing.junit)
   testImplementation(Dependencies.Kotlin.Ktor.clientTest)
+
   androidTestImplementation(Dependencies.Testing.daggerHilt)
-//  androidTestImplementation(Dependencies.Testing.uiTest)
+  androidTestImplementation(Dependencies.Testing.uiTest)
+  androidTestImplementation(Dependencies.Testing.AndroidX.Ext.junit)
 }
