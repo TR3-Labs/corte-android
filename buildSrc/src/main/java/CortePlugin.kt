@@ -16,7 +16,7 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin
 
-class LobstersPlugin : Plugin<Project> {
+class CortePlugin : Plugin<Project> {
 
   override fun apply(project: Project) {
     project.configureForAllProjects()

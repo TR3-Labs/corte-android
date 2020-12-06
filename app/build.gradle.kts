@@ -6,7 +6,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization") version "1.4.20"
   id("dagger.hilt.android.plugin")
-  `lobsters-plugin`
+  `corte-plugin`
   `core-library-desugaring`
 }
 

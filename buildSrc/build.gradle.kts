@@ -16,9 +16,9 @@ kotlinDslPluginOptions {
 
 gradlePlugin {
   plugins {
-    register("lobsters") {
-      id = "lobsters-plugin"
-      implementationClass = "LobstersPlugin"
+    register("corte") {
+      id = "corte-plugin"
+      implementationClass = "CortePlugin"
     }
     register("coreLibraryDesugaring") {
       id = "core-library-desugaring"
