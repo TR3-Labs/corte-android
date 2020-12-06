@@ -1,63 +1,100 @@
+import java.util.*
+
 plugins {
-  id ("com.android.application")
+  id("com.android.application")
   kotlin("android")
+  kotlin("kapt")
+  kotlin("plugin.serialization") version "1.4.20"
+  id("dagger.hilt.android.plugin")
+  `corte-plugin`
+  `core-library-desugaring`
 }
 
-android {
-  compileSdkVersion(30)
+val keystorePropertiesFile = rootProject.file("keystore.properties")
 
+android {
+  adbOptions.installOptions("--user 0")
   defaultConfig {
     applicationId = "dev.skrilltrax.corte"
-    minSdkVersion(21)
-    targetSdkVersion(30)
     versionCode = 1
     versionName = "1.0"
-
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    javaCompileOptions.annotationProcessorOptions {
+      argument("room.schemaLocation", "${projectDir}/schemas")
+    }
   }
 
   buildTypes {
-    getByName("release") {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-    getByName("debug") {
-      isMinifyEnabled = false
+    named("release") {
+      isMinifyEnabled = true
+      setProguardFiles(listOf("proguard-android-optimize.txt", "proguard-rules.pro"))
     }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-    languageVersion = "1.4"
-    freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-    useIR = true
-  }
-  buildFeatures {
-    compose = true
-  }
+
+  buildFeatures.compose = true
+
   composeOptions {
-    kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
-    kotlinCompilerVersion = "1.4.10"
+    kotlinCompilerVersion = "1.4.20"
+    kotlinCompilerExtensionVersion = Dependencies.COMPOSE_VERSION
+  }
+
+  if (keystorePropertiesFile.exists()) {
+    val keystoreProperties = Properties()
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+    signingConfigs {
+      register("release") {
+        keyAlias = keystoreProperties["keyAlias"] as String
+        keyPassword = keystoreProperties["keyPassword"] as String
+        storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+        storePassword = keystoreProperties["storePassword"] as String
+      }
+    }
+    listOf("release", "debug").map {
+      buildTypes.getByName(it).signingConfig = signingConfigs.getByName(it)
+    }
   }
 }
 
 dependencies {
-  val kotlinVersion = rootProject.extra["kotlin_version"] as String
-  val composeVersion = rootProject.extra["compose_version"] as String
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-  implementation("androidx.core:core-ktx:1.3.2")
-  implementation("androidx.appcompat:appcompat:1.2.0")
-  implementation("com.google.android.material:material:1.2.1")
-  implementation("androidx.compose.ui:ui:$composeVersion")
-  implementation("androidx.compose.material:material:$composeVersion")
-  implementation("androidx.ui:ui-tooling:$composeVersion")
-  implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
+  kapt(Dependencies.AndroidX.Hilt.daggerCompiler)
+  kapt(Dependencies.AndroidX.Hilt.daggerHiltCompiler)
+  kapt(Dependencies.AndroidX.Room.compiler)
+  kapt(Dependencies.ThirdParty.Roomigrant.compiler)
+  implementation(Dependencies.AndroidX.activityKtx)
+  implementation(Dependencies.AndroidX.appCompat)
+  implementation(Dependencies.AndroidX.browser)
+  implementation(Dependencies.AndroidX.coreKtx)
+  implementation(Dependencies.AndroidX.material)
+  implementation(Dependencies.AndroidX.Compose.compiler)
+  implementation(Dependencies.AndroidX.Compose.foundation)
+  implementation(Dependencies.AndroidX.Compose.foundationLayout)
+  implementation(Dependencies.AndroidX.Compose.material)
+  implementation(Dependencies.AndroidX.Compose.navigation)
+  implementation(Dependencies.AndroidX.Compose.runtime)
+  implementation(Dependencies.AndroidX.Compose.ui)
+  implementation(Dependencies.AndroidX.Compose.uiTooling)
+  implementation(Dependencies.AndroidX.Compose.uiUnit)
+  implementation(Dependencies.AndroidX.Hilt.dagger)
+  implementation(Dependencies.AndroidX.Hilt.hiltLifecycleViewmodel)
+  implementation(Dependencies.AndroidX.Lifecycle.runtimeKtx)
+  implementation(Dependencies.AndroidX.Lifecycle.viewmodelKtx)
+  implementation(Dependencies.AndroidX.Room.runtime)
+  implementation(Dependencies.AndroidX.Room.ktx)
+  implementation(Dependencies.Kotlin.Coroutines.android)
+  implementation(Dependencies.Kotlin.Ktor.clientCore)
+  implementation(Dependencies.Kotlin.Ktor.clientJson)
+  implementation(Dependencies.Kotlin.Ktor.clientOkHttp)
+  implementation(Dependencies.Kotlin.Ktor.clientSerialization)
+  implementation(Dependencies.Kotlin.Serialization.json)
+  implementation(Dependencies.ThirdParty.accompanist)
+  implementation(Dependencies.ThirdParty.customtabs)
+  implementation(Dependencies.ThirdParty.Roomigrant.runtime)
 
-  testImplementation("junit:junit:4.13.1")
-  androidTestImplementation("androidx.test.ext:junit:1.1.2")
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+  testImplementation(Dependencies.Testing.junit)
+  testImplementation(Dependencies.Kotlin.Ktor.clientTest)
+
+  androidTestImplementation(Dependencies.Testing.daggerHilt)
+  androidTestImplementation(Dependencies.Testing.uiTest)
+  androidTestImplementation(Dependencies.Testing.AndroidX.Ext.junit)
 }
