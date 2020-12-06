@@ -7,7 +7,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
-import androidx.ui.tooling.preview.Preview
 import dev.skrilltrax.corte.ui.CorteTheme
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +28,6 @@ fun Greeting(name: String) {
   Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
   CorteTheme {
